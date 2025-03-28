@@ -1,0 +1,1 @@
+export { defaultApplicationRouter } from './default.router';
