@@ -1,4 +1,4 @@
-import { Controller, Get } from "../shared";
+import { Controller, Get } from "../shared/core";
 
 @Controller('')
 export class ApiController {

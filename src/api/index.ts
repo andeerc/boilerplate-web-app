@@ -1,6 +1,6 @@
 import { Express } from 'express';
-import { bootstrapApi } from './shared';
-import { controllers } from './routers';
+import { controllers } from './controllers';
+import { bootstrapApi } from './shared/core';
 export function configureApi(app: Express) {
   console.log('Configuring API...');
   bootstrapApi(app, controllers);

@@ -10,6 +10,26 @@ export function bootstrapApi(app: Express, controllers: typeof Function[]) {
       // Register the controller path with the app instance
       instance.routes.forEach((route: any) => {
         const method = route.method.toLowerCase();
+        let instancePath = Reflect.getMetadata('design:paramtypes', instance.constructor) ?? ''
+        if (instancePath.startsWith('/')) {
+          instancePath = instancePath.substring(1); // Remove leading slash
+        }
+        if (instancePath.endsWith('/')) {
+          instancePath = instancePath.slice(0, -1); // Remove trailing slash
+        }
+        if (route.path.startsWith('/')) {
+          route.path = route.path.substring(1); // Remove leading slash
+        }
+        if (route.path.endsWith('/')) {
+          route.path = route.path.slice(0, -1); // Remove trailing slash
+        }
+
+        route.path = `/${instancePath}/${route.path}`; // Combine controller path and route path
+        route.path = route.path.replace(/\/+/g, '/'); // Remove duplicate slashes
+        route.path = route.path.replace(/\/$/, ''); // Remove trailing slash
+        route.path = route.path.replace(/^\//, ''); // Remove leading slash
+
+        route.path = `/${route.path}`; // Add leading slash
 
         app[method as keyof Express](route.path, async (req: Request, res: Response, next: Function) => {
           const functionParameters: any[] = [];

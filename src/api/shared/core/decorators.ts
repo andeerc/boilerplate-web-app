@@ -1,3 +1,6 @@
+import 'reflect-metadata';
+
+
 export function createRouteDecorator(method: string, path: string): MethodDecorator {
   return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
     // Ensure the target has a routes array to store route information
@@ -8,7 +11,7 @@ export function createRouteDecorator(method: string, path: string): MethodDecora
     // Create a route object with method and path
     const route = {
       method,
-      path: ('/api/' + path).replace(/\/+/g, '/'), // Ensure the path is properly formatted
+      path,
       handler: descriptor.value.name, // Use the method name as the handler
     };
 
@@ -28,13 +31,18 @@ export function createRouteDecorator(method: string, path: string): MethodDecora
  */
 export function Controller(path: string): ClassDecorator {
   return (target: any) => {
-    // Ensure the target has a routes array to store route information
-    if (!target.routes) {
-      target.routes = [];
+    let controllerPath = path.startsWith('/') ? path : '/' + path; // Ensure the path starts with a leading slash
+    controllerPath = '/api' + controllerPath; // Prefix the path with '/api'
+    if (controllerPath.endsWith('/')) {
+      controllerPath = controllerPath.slice(0, -1); // Remove trailing slash
+    }
+    if (controllerPath.startsWith('/')) {
+      controllerPath = controllerPath.substring(1); // Remove leading slash
     }
 
-    // Store the controller path
-    target.controllerPath = path;
+    Reflect.defineMetadata('design:paramtypes', controllerPath, target); // Store the controller path in metadata
+
+    return target
   }
 }
 
