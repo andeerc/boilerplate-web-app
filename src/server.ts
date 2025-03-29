@@ -7,7 +7,7 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadApi } from './api';
+import { configureApi } from './api';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -15,7 +15,11 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
-loadApi(app);
+app.get('/api/teste', (req, res) => {
+  res.json({ message: 'Hello from the API!' });
+});
+
+configureApi(app);
 
 /**
  * Serve static files from /browser

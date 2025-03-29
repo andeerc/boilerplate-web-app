@@ -1,6 +1,7 @@
 import { Express } from 'express';
-import { defaultApplicationRouter } from './application';
-
-export async function loadApi(app: Express) {
-  app.get('/api/', defaultApplicationRouter);
+import { bootstrapApi } from './shared';
+import { controllers } from './routers';
+export function configureApi(app: Express) {
+  console.log('Configuring API...');
+  bootstrapApi(app, controllers);
 }
