@@ -1,0 +1,53 @@
+<!-- login page -->
+<div class="login-page">
+  <div class="login-form-container">
+    <h2>Login</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          [formControl]="form.controls.email"
+          required
+          type="email"
+        />
+        <mat-error *ngIf="form.get('email')?.hasError">
+          <span *ngIf="form.get('email')?.hasError('email')">Invalid email format.</span>
+          <span *ngIf="form.get('email')?.hasError('required')">Email is required.</span>
+          <span *ngIf="form.get('email')?.hasError('emailExists')">Email does not exist.</span>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hidePassword() ? 'password' : 'text'"
+          [formControl]="form.controls.password"
+          required
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="clickEvent($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hidePassword()"
+        >
+          <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="form.get('password')?.hasError">
+          <span *ngIf="form.get('password')?.hasError('minlength')">Password must be at least 6 characters long.</span>
+          <span *ngIf="form.get('password')?.hasError('required')">Password is required.</span>
+        </mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Login</button>
+      <button mat-button (click)="onForgotPassword()">Forgot Password?</button>
+      <button mat-button (click)="onRegister()">Register</button>
+    </form>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage() }}</div>
+    <div *ngIf="successMessage" class="success-message">{{ successMessage() }}</div>
+  </div>
+  <div class="login-image">
+    <img src="assets/login-image.jpg" alt="Login Image" />
+  </div>
+</div>
+
